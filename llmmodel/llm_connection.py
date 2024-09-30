@@ -1,5 +1,5 @@
 from mistralai import Mistral
-from llmmodel.utils import encode_image_to_base64
+from llmmodel.utils import decode_image
 from llmmodel.schemas import STextData, SImgData
 from config import API_KEY, TEXT_MODEL, MAIN_SYSTEM_PROMPT, \
     MAIN_CONTEXT_PROMPT, IMAGE_TO_TEXT_MODEL, IMAGE_TO_TEXT_CONTEXT_PROMPT, \
@@ -29,7 +29,7 @@ async def text_to_text_req(product: STextData):
 
 
 async def image_to_text_req(product: SImgData):
-    base64_image = encode_image_to_base64(product.image_path)
+    dec_image = decode_image(product.image_path)
     model_response = client.chat.complete(
         model=IMAGE_TO_TEXT_MODEL,
         messages=[
@@ -46,7 +46,7 @@ async def image_to_text_req(product: SImgData):
                     },
                     {
                         "type": "image_url",
-                        "image_url": base64_image
+                        "image_url": dec_image
                     }
                 ],
             },
