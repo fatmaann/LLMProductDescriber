@@ -1,7 +1,7 @@
 from mistralai import Mistral
 from llmmodel.utils import decode_image, compile_text_mgs, compile_img_mgs
 from llmmodel.schemas import STextData, SImgData
-from config import API_KEY, TEXT_MODEL, IMAGE_TO_TEXT_MODEL
+from etc.config import API_KEY, TEXT_MODEL, IMAGE_TO_TEXT_MODEL
 
 client = Mistral(api_key=API_KEY)
 

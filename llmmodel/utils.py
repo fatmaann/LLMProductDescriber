@@ -1,6 +1,6 @@
 import base64
 import requests
-from config import MAIN_SYSTEM_PROMPT, MAIN_CONTEXT_PROMPT, IMAGE_TO_TEXT_CONTEXT_PROMPT
+from etc.config import MAIN_SYSTEM_PROMPT, MAIN_CONTEXT_PROMPT, IMAGE_TO_TEXT_CONTEXT_PROMPT
 
 
 def decode_image(image_path: str) -> str:

@@ -5,7 +5,7 @@ TEXT_MODEL = "mistral-large-latest"
 IMAGE_TO_TEXT_MODEL = "pixtral-12b-2409"
 
 
-with open("llmmodel/promts/prompts.yaml", encoding="utf-8") as f:
+with open("../llmmodel/promts/prompts.yaml", encoding="utf-8") as f:
     prompts = safe_load(f)
 
 
