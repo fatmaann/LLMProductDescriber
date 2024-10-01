@@ -11,7 +11,7 @@ class STextData(BaseModel):
 
 class SImgData(BaseModel):
     image_path: str = Field(..., description="Ссылка на изображение товара")
-    description: Optional[str] = Field('', description="Описание товара")
+    description: Optional[str] = Field("", description="Описание товара")
 
 
 class Result(BaseModel):

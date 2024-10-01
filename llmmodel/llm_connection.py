@@ -1,55 +1,31 @@
 from mistralai import Mistral
-from llmmodel.utils import decode_image
+from llmmodel.utils import decode_image, compile_text_mgs, compile_img_mgs
 from llmmodel.schemas import STextData, SImgData
-from config import API_KEY, TEXT_MODEL, MAIN_SYSTEM_PROMPT, \
-    MAIN_CONTEXT_PROMPT, IMAGE_TO_TEXT_MODEL, IMAGE_TO_TEXT_CONTEXT_PROMPT, \
-    IMAGE_TO_TEXT_SYSTEM_PROMPT
+from config import API_KEY, TEXT_MODEL, IMAGE_TO_TEXT_MODEL
 
 client = Mistral(api_key=API_KEY)
 
 
 async def text_to_text_req(product: STextData):
-    llm_response = client.chat.complete(
+    model_response = client.chat.complete(
         model=TEXT_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": MAIN_SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": MAIN_CONTEXT_PROMPT.format(text=product.name,
-                                                      size=product.size,
-                                                      color=product.color,
-                                                      material=product.material),
-            },
-        ],
+        messages=await compile_text_mgs(**product.__dict__),
     )
-    return llm_response.choices[0].message.content
+    return model_response.choices[0].message.content
 
 
 async def image_to_text_req(product: SImgData):
     dec_image = decode_image(product.image_path)
-    model_response = client.chat.complete(
-        model=IMAGE_TO_TEXT_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": IMAGE_TO_TEXT_SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": IMAGE_TO_TEXT_CONTEXT_PROMPT.format(description=product.description)
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": dec_image
-                    }
-                ],
-            },
-        ],
-    )
-    return model_response.choices[0].message.content
+    if dec_image:
+        model_response = client.chat.complete(
+            model=IMAGE_TO_TEXT_MODEL,
+            messages=await compile_img_mgs(dec_image, product.description),
+        )
+        return model_response.choices[0].message.content
+    if product.description:
+        model_response = client.chat.complete(
+            model=TEXT_MODEL,
+            messages=await compile_text_mgs(product.description),
+        )
+        return model_response.choices[0].message.content
+    return "The request could not be completed. Please check the image link and description."
