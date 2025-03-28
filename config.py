@@ -1,6 +1,6 @@
 from yaml import safe_load
 
-API_KEY = "LWqc9zRcUXiCO7uPPYmslu26O0jJsb46"
+API_KEY = #
 TEXT_MODEL = "mistral-large-latest"
 IMAGE_TO_TEXT_MODEL = "pixtral-12b-2409"
 
